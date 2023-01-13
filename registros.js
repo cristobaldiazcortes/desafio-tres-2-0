@@ -30,7 +30,37 @@ const obtenerPosts = async () => {
 };
 // obtenerPosts()
 
-//const eliminarPosts = async () => {
+// modificar posts titulo
 
-//}
-module.exports = { agregarPosts, obtenerPosts };
+const modificarPostsTitulo = async (id, titulo) => {
+  const consulta = "UPDATE posts SET titulo = $2 WHERE id = $1";
+  const values = [id, titulo];
+  const { rowCount } = await pool.query(consulta, values);
+  if (rowCount === 0) {
+    throw { code: 404, message: "No se consiguió ningún viaje con este id" };
+  }
+};
+
+
+
+// eliminar posts
+
+const eliminarPosts = async (id) => {
+  const consulta = "DELETE FROM posts WHERE id = $1";
+  const values = [id];
+  const result = await pool.query(consulta, values);
+  return result;
+};
+
+
+//likes 
+
+const agregarLikePosts = async (id) => {
+  const consulta =
+    "UPDATE posts SET likes= COALESCE(likes,0) + 1 WHERE id=$1";
+  const values = [id];
+  const result = await pool.query(consulta, values);
+  return result;
+};
+
+module.exports = { agregarPosts, obtenerPosts, eliminarPosts, modificarPostsTitulo, agregarLikePosts };

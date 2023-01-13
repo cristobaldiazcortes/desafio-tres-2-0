@@ -1,4 +1,4 @@
-const { agregarPosts, obtenerPosts } = require('./registros')
+const { agregarPosts, obtenerPosts, eliminarPosts, modificarPostsTitulo, agregarLikePosts   } = require('./registros')
 const express = require('express');
 const app = express();
 const cors = require('cors')
@@ -27,3 +27,41 @@ app.post("/posts", async (req, res) => {
     })
 
 
+// modificar post
+
+app.put("/posts/:id", async (req, res) => {
+    const { id } = req.params;
+    const { nombre } = req.query;
+    try {
+      await modificarPostsTitulo(id, nombre);
+      res.send("nombre modificado con éxito");
+    } catch (error) {
+      res.status(500).send("favor corregir el error");
+    }
+  });
+
+
+
+// eliminar post
+
+app.delete("/posts/:id", async (req, res) => {
+    const { id } = req.params;
+    await eliminarPosts(id);
+    res.send("Post eliminado con éxito");
+  });
+
+
+
+// añadir likes
+
+
+  app.put("/posts/like/:id", async (req, res) => {
+    
+    try {
+      const { id } = req.params;
+      await agregarLikePosts(id);
+      res.send("like agregado con éxito");
+    } catch (error) {
+      res.status(500).send("favor corregir el error");
+    }
+  });
